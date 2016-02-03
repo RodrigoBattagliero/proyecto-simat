@@ -41,9 +41,9 @@
 					    	<input type="text" class="form-control datetimepicker" name="fecha_inicio" id="fecha_inicio" placeholder="Fecha">
 					  	</div>
 					  
-					  <button type="submit" class="btn btn-default">Confirmar</button>
+					  <button type="submit" class="btn btn-default">Buscar</button>
 					</form>
-		 			<div id="calendario"></div>
+		 			
 		 		</div>
 		 		<div class="col-sm-8">
 		 			<h4 class="page-header">Turnos</h4>
@@ -60,8 +60,8 @@
 								<?php foreach($turnos as $turno): ?>
 						 			<tr>
 						 				<td><?= $turno->fecha_inicio ?></td>
-						 				<td><?= $turno->id_profesional ?></td>
-						 				<td><?= $turno->id_paciente ?></td>
+						 				<td><?= $turno->profesional ?></td>
+						 				<td><?= $turno->paciente ?></td>
 						 			</tr>
 					 			<?php endforeach; ?>
 				 			<?php else: ?>

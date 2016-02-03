@@ -49,7 +49,7 @@ abstract class Model extends DBAbstractModel {
 	* @return void
 	*/
 	public function get($whereData = array(),$whereOption = ''){
-
+		$this->dbRows = null;
 		if(empty($whereOption))
 			$this->_setWhere($whereData);
 		else
@@ -110,6 +110,7 @@ abstract class Model extends DBAbstractModel {
 			' UPDATE '.$this->table.
 			' SET ' . $update .
 			' WHERE ' . $this->where;
+		
 		return $this->singleQuery();
 	}
 
@@ -151,13 +152,13 @@ abstract class Model extends DBAbstractModel {
 	}
 
 	// definir variable $where para ejecutar
-	private function _setWhere($data = array()){
+	protected function _setWhere($data = array()){
 		$this->where = ' 1';
 		foreach($data as $key => $value)
 			$this->where .= ' AND '.$key.' = \''.$value.'\'';
 	}
 
-	private function _setUpdate($data = array()){
+	protected function _setUpdate($data = array()){
 		$update = '';
 		// cantidad de elementos/campos en el array
 		$lenght = count($data);
@@ -174,7 +175,7 @@ abstract class Model extends DBAbstractModel {
 		return $update;
 	}
 
-	private function _setSet($data = array()){
+	protected function _setSet($data = array()){
 		$set  = array('','');
 		$i = 1;
 		$lenght = count($data);

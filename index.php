@@ -131,7 +131,7 @@ $app->group('/guardias', function() use($app){
 		$profesionalesList = $profesionales->get();
 
 		$guardias = new GuardiasController();
-		$guardiasList = $guardias->get();
+		$guardiasList = $guardias->getDefault();
 
 		$app->render('guardias.php',array('profesionales'=>$profesionalesList,'guardias'=>$guardiasList));
 	});
@@ -141,8 +141,65 @@ $app->group('/guardias', function() use($app){
 		$data = $app->request()->post();
 		$result = $guardias->save($data);
 
-		$app->render('guardias.php');
+		$app->render('guardias.php',array('result'=>$result));
 	});
+
+	$app->post('/search', function() use($app){
+		$guardias = new GuardiasController();
+		$data = $app->request()->post();
+
+		$search = array();
+
+		if($data['id_profesional'] > 0)
+			$search['g.id_profesional'] = $data['id_profesional'];
+		if(!empty($data['fecha_inicio']))
+			$search['g.fecha_inicio'] = $data['fecha_inicio'];
+		if(!empty($data['fecha_final']))
+			$search['g.fecha_final'] = $data['fecha_final'];
+
+		$guardiasList = $guardias->getDefault($search);
+
+		$profesionales = new ProfesionalesController();
+		$profesionalesList = $profesionales->get();
+
+
+		$app->render('guardias.php',array('profesionales'=>$profesionalesList,'guardias'=>$guardiasList));
+		
+	});
+
+	$app->get('/eliminar/:id', function($id) use($app){
+		$guardias = new GuardiasController();
+		$result = $guardias->delete(array('id'=>$id));
+
+		$app->render('guardias.php',array('result'=>$result));
+	});
+
+	$app->get('/:id', function($id) use($app){
+		$guardias = new GuardiasController();
+		$guardiasList = $guardias->getDefault();
+		$guardiaSelected = $guardias->get(array('id'=>$id));
+
+		
+		$profesionales = new ProfesionalesController();
+		$profesionalesList = $profesionales->get();
+
+		$app->render('guardias.php',array(
+			'profesionales'=>$profesionalesList,
+			'guardias'=>$guardiasList,
+			'guardiaSelected'=>$guardiaSelected[0]
+			)
+		);
+
+	});
+
+	$app->post('/:id', function($id) use($app){
+		$guardias = new GuardiasController();
+		$data = $app->request()->post();
+		$result = $guardias->update($data,array('id'=>$id));
+
+		$app->render('guardias.php',array('result'=>$result));
+	});
+	
 
 });
 
@@ -150,7 +207,7 @@ $app->group('/historias_clinicas',function() use($app){
 
 	$app->get('/', function() use($app){
 		$historiasClinicas = new HistoriasClinicasController();
-		$historias = $historiasClinicas->get();
+		$historias = $historiasClinicas->getDefault();
 
 		$profesionales = new ProfesionalesController();
 		$profe = $profesionales->get();
@@ -165,6 +222,36 @@ $app->group('/historias_clinicas',function() use($app){
 		$app->render('historia_clinica_alta.php');
 	});
 
+	$app->post('/search', function() use($app){
+		$historiasClinicas = new HistoriasClinicasController();
+		$data = $app->request()->post();
+
+		$search = array();
+
+		if($data['id_profesional'] > 0)
+			$search['h.id_profesional'] = $data['id_profesional'];
+		if($data['id_paciente'] > 0)
+			$search['h.id_paciente'] = $data['id_paciente'];
+
+		$historias = $historiasClinicas->getDefault($search);
+
+		$profesionales = new ProfesionalesController();
+		$profe = $profesionales->get();
+
+		$pacientes = new PacientesController();
+		$paci = $pacientes->get();
+
+		$app->render('historias_clinicas.php',array('historias'=>$historias, 'profesionales'=>$profe, 'pacientes'=>$paci));
+		
+	});
+
+	$app->get('/eliminar/:id', function($id) use($app){
+		$historiasClinicas = new HistoriasClinicasController();
+		$result = $historiasClinicas->delete(array('id'=>$id));
+
+		$app->render('historias_clinicas.php',array('result'=>$result));
+	});
+
 });
 
 $app->group('/turnos', function() use($app){
@@ -177,7 +264,7 @@ $app->group('/turnos', function() use($app){
 		$paci = $pacientes->get();
 
 		$turnos = new TurnosController();
-		$tur = $turnos->get();
+		$tur = $turnos->getDefault();
 		$app->render('turnos.php',array('profesionales'=>$profe, 'pacientes'=>$paci, 'turnos'=>$tur));
 	});
 
@@ -193,6 +280,21 @@ $app->group('/turnos', function() use($app){
 		$result = $turnos->save($data);
 
 		$app->render('turno_sacar.php',array('result'=>$result));
+	});
+
+});
+
+$app->group('/internaciones', function() use($app){
+
+	$app->get('/', function() use($app){
+
+		$camas = new CamasController();
+		$cam = $camas->get();
+
+		$pacientes = new PacientesController();
+		$paci = $pacientes->get();
+
+		$app->render('internaciones.php',array('internaciones'=>$cam,'pacientes'=>$paci));
 	});
 
 });

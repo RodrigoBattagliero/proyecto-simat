@@ -16,6 +16,7 @@
 		        <li><a href="<?= URL ?>profesionales">Profesionales</a></li>
 		        <li><a href="<?= URL ?>guardias">Guardias</a></li>
 		        <li><a href="<?= URL ?>historias_clinicas">Historias clinicas</a></li>
+		        <li><a href="<?= URL ?>internaciones">Internaciones</a></li>
 		        <li><a href="#">Salir</a></li>
 		    </ul>
 		</div>

@@ -13,16 +13,27 @@ class GuardiasController extends Controller {
 		return $this->model->get($whereData,$whereOption);
 	}
 
-	public function save($data = array()){
-		return $this->model->save($data);
+	public function getDefault($whereData = array(), $whereOption = ''){
+		return $this->model->getDefault($whereData);
 	}
 
-	public function update($data = array()){
-		return $this->model->update($data);
+	public function save($data = array()){
+		$result = null;
+		if($this->model->beforeSave($data)){
+			$result = $this->model->save($data);
+		}else{
+			$result = 'El profesional seleccionado ya tiene esa franja horaria cargada.';
+		}
+		return $result;
+	}
+
+	public function update($data = array(),$whereData = array()){
+		return $this->model->update($data,$whereData);
 	}
 
 	public function delete($whereData = array(),$whereOption = ''){
 		return $this->model->delete($whereData,$whereOption);
 	}
+
 }
 ?>

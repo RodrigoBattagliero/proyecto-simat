@@ -13,6 +13,10 @@ class TurnosController extends Controller {
 		return $this->model->get($whereData,$whereOption);
 	}
 
+	public function getDefault($whereData = array(), $whereOption = ''){
+		return $this->model->getDefault();
+	}
+
 	public function save($data = array()){
 		return $this->model->save($data);
 	}
@@ -24,5 +28,7 @@ class TurnosController extends Controller {
 	public function delete($whereData = array(),$whereOption = ''){
 		return $this->model->delete($whereData,$whereOption);
 	}
+
+	
 }
 ?>

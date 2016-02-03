@@ -1,3 +1,11 @@
+<?php if(!isset($guardiaSelected)){
+		$guardiaSelected = new stdClass();
+		$guardiaSelected->id = null;
+		$guardiaSelected->id_profesional = null;
+		$guardiaSelected->fecha_inicio = null;
+		$guardiaSelected->fecha_final = null;
+	}
+?>
 <!DOCTYPE html>
 <html lang="es">
 	<head>
@@ -7,12 +15,17 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<!-- Latest compiled and minified CSS -->
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
-
-		<link rel="stylesheet" type="text/css" href="../app/view/js/pickadate/themes/default.css">
-		<link rel="stylesheet" type="text/css" href="../app/view/js/pickadate/themes/default.date.css">
-		<link rel="stylesheet" type="text/css" href="../app/view/js/pickadate/themes/default.time.css">
-
-		<link rel="stylesheet" href="../app/view/js/datetimepicker/jquery.datetimepicker.css">
+		
+			<link rel="stylesheet" type="text/css" href="../app/view/js/pickadate/themes/default.css">
+			<link rel="stylesheet" type="text/css" href="../app/view/js/pickadate/themes/default.date.css">
+			<link rel="stylesheet" type="text/css" href="../app/view/js/pickadate/themes/default.time.css">
+			<link rel="stylesheet" href="../app/view/js/datetimepicker/jquery.datetimepicker.css">
+		
+			<link rel="stylesheet" type="text/css" href="../../app/view/js/pickadate/themes/default.css">
+			<link rel="stylesheet" type="text/css" href="../../app/view/js/pickadate/themes/default.date.css">
+			<link rel="stylesheet" type="text/css" href="../../app/view/js/pickadate/themes/default.time.css">
+			<link rel="stylesheet" href="../../app/view/js/datetimepicker/jquery.datetimepicker.css">
+		
 	</head>
 	<body>
 
@@ -21,7 +34,38 @@
 		 	<div class="row">
 		 		<div class="col-sm-4">
 		 			<h4 class="page-header">Nueva guardia</h4>
-		 			<form  method="post">
+		 			<form method="post" action="./<?php echo ($guardiaSelected->id) ? $guardiaSelected->id : '' ?>">
+		 				
+		 				<div class="form-group">
+		 					<label for="id_profesional">Profesional</label>
+		 					<select class="form-control" id="id_profesional" name="id_profesional" >
+		 						<option value="0">Seleccionar</option>
+								<?php foreach($profesionales as $profesional): ?>
+									<option value="<?= $profesional->id ?>" <?php echo ($guardiaSelected->id_profesional == $profesional->id) ? ' selected ' : '' ?>><?= $profesional->apellido . ', ' . $profesional->nombre ?></option>
+								<?php endforeach; ?>
+							</select>
+		 				</div>
+	 				
+						<div class="form-group">
+		 					<label for="fecha_inicio">Incio</label>
+						    <label class="sr-only" for="fecha_inicio">Fecha</label>
+						    <input type="text" class="form-control fecha_inicio datetimepicker" name="fecha_inicio" id="fecha_inicio" placeholder="Fecha" value="<?= $guardiaSelected->fecha_inicio ?>" >
+						</div>
+					
+					
+						<div class="form-group">
+		 					<label for="fecha_final">Fin</label>
+							<label class="sr-only" for="fecha_final">Fecha</label>
+						    <input type="text" class="form-control fecha_final datetimepicker" name="fecha_final" id="fecha_final" placeholder="Fecha" value="<?= $guardiaSelected->fecha_final ?>">
+						</div>
+				  	
+				  	
+				  		<button type="submit" class="btn btn-default">Confirmar</button>
+				  	
+					</form>
+
+					<h4 class="page-header">Buscar</h4>
+		 			<form  method="post" action="./search">
 		 				
 		 				<div class="form-group">
 		 					<label for="id_profesional">Profesional</label>
@@ -60,6 +104,7 @@
 				 				<th>Inicio</th>
 				 				<th>Fin</th>
 				 				<th>Doctor</th>
+				 				<th>Acciones</th>
 				 			</tr>
 				 		</thead>
 				 		<tbody>
@@ -68,12 +113,16 @@
 						 			<tr>
 						 				<td><?= $guardia->fecha_inicio ?></td>
 						 				<td><?= $guardia->fecha_final ?></td>
-						 				<td><?= $guardia->id_profesional ?></td>
+						 				<td><?= $guardia->profesional ?></td>
+						 				<td>
+						 					<a href="<?= URL ?>guardias/eliminar/<?= $guardia->id ?>">Eliminar</a>
+						 					<a href="<?= URL ?>guardias/<?= $guardia->id ?>">Modificar</a>
+						 				</td>
 						 			</tr>
 				 			<?php endforeach; ?>
 				 			<?php else: ?>
 				 				<tr>
-				 					<td colspan="3">No se encontraron datos</td>
+				 					<td colspan="4">No se encontraron datos</td>
 				 				</tr>
 				 			<?php endif; ?>
 				 		</tbody>
@@ -87,11 +136,21 @@
 		<!-- Latest compiled and minified JavaScript -->
 		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
 		
-		<!-- datepicker -->
-		<script type="text/javascript" src="../app/view/js/pickadate/picker.js"></script>
-		<script type="text/javascript" src="../app/view/js/pickadate/picker.date.js"></script>
-		<script type="text/javascript" src="../app/view/js/pickadate/picker.time.js"></script>
-		<script type="text/javascript" src="../app/view/js/calendario.js"></script>
-		<script type="text/javascript" src="../app/view/js/datetimepicker/jquery.datetimepicker.full.min.js"></script>
+		
+			<!-- datepicker -->
+			<script type="text/javascript" src="../app/view/js/pickadate/picker.js"></script>
+			<script type="text/javascript" src="../app/view/js/pickadate/picker.date.js"></script>
+			<script type="text/javascript" src="../app/view/js/pickadate/picker.time.js"></script>
+			<script type="text/javascript" src="../app/view/js/calendario.js"></script>
+			<script type="text/javascript" src="../app/view/js/datetimepicker/jquery.datetimepicker.full.min.js"></script>
+		
+			<!-- datepicker -->
+			<script type="text/javascript" src="../../app/view/js/pickadate/picker.js"></script>
+			<script type="text/javascript" src="../../app/view/js/pickadate/picker.date.js"></script>
+			<script type="text/javascript" src="../../app/view/js/pickadate/picker.time.js"></script>
+			<script type="text/javascript" src="../../app/view/js/calendario.js"></script>
+			<script type="text/javascript" src="../../app/view/js/datetimepicker/jquery.datetimepicker.full.min.js"></script>
+		
+
 	</body>
 </html>

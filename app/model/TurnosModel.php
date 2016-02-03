@@ -24,5 +24,24 @@ class TurnosModel extends Model{
 		$this->order = ' fecha_inicio DESC ';
 
 	}
+
+	public function getDefault(){
+		
+		$this->dbQuery =
+			'SELECT 
+				t.id, DATE_FORMAT(t.fecha_inicio, "%d/%m/%Y %H:%i") AS fecha_inicio, DATE_FORMAT(t.fecha_final, "%d/%m/%Y %H:%i") AS fecha_final, t.id_profesional, t.id_paciente, CONCAT_WS(", ",pa.apellido, pa.nombre) AS paciente, CONCAT_WS(", ", pr.apellido, pr.nombre) AS profesional 
+			FROM 
+				turnos AS t
+			LEFT JOIN
+				pacientes AS pa ON pa.id = t.id_paciente
+			LEFT JOIN
+				profesionales AS pr ON pr.id = t.id_profesional
+			WHERE 
+				1 
+			ORDER BY fecha_inicio DESC';
+		$this->rowsFromQuery();
+
+		return $this->dbRows;
+	}
 }
 ?>

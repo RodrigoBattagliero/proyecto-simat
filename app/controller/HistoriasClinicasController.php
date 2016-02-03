@@ -13,6 +13,10 @@ class HistoriasClinicasController extends Controller {
 		return $this->model->get($whereData,$whereOption);
 	}
 
+	public function getDefault($whereData = array()){
+		return $this->model->getDefault($whereData);
+	}
+
 	public function save($data = array()){
 		return $this->model->save($data);
 	}

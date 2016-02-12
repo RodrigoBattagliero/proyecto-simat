@@ -23,5 +23,12 @@ class LoginModel extends Model{
 		$this->order = ' user DESC ';
 
 	}
+
+	public function login($data = array()){
+		$this->dbQuery = "SELECT * FROM login WHERE user = '{$data['user']}' AND password = '{$data['password']}'";
+		$this->rowsFromQuery();
+
+		return $this->dbRows;		
+	}
 }
 ?>

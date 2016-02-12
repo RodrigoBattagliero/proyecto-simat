@@ -9,7 +9,7 @@ class CamasModel extends Model{
 		$this->table = 'camas';
 		$this->where = ' 1';
 
-		$this->defaultFields = ' id,habitacion,fecha_ingreso,id_paciente ';
+		$this->defaultFields = ' id,habitacion,fecha_ingreso,id_paciente,cama ';
 
 		$this->setFiels();
 
@@ -17,11 +17,35 @@ class CamasModel extends Model{
 				'id' => 'integer',
 				'habitacion' => 'integer',
 				'fecha_ingreso' => 'datetime',
-				'id_paciente' => 'integer'
+				'id_paciente' => 'integer',
+				'cama' => 'integer',
+				'fecha_salida' => 'datetime'
 			);
 
 		$this->order = ' habitacion DESC ';
 
+	}
+
+	public function getDefault(){
+
+		$this->dbQuery =
+			'SELECT 
+				c.id, DATE_FORMAT(c.fecha_ingreso, "%d/%m/%Y %H:%i") AS fecha_ingreso, c.id_paciente, CONCAT_WS(", ",pa.apellido, pa.nombre) AS paciente, c.habitacion,c.cama
+			FROM 
+				camas AS c
+			LEFT JOIN
+				pacientes AS pa ON c.id_paciente = pa.id
+			WHERE c.fecha_salida IS NULL OR c.fecha_salida = "0000-00-00 00:00:00"
+			ORDER BY c.fecha_ingreso DESC';
+		
+		$this->rowsFromQuery();
+
+		return $this->dbRows;
+	}
+
+	public function salida($id = 0){
+		$this->dbQuery = "UPDATE camas SET fecha_salida = NOW() WHERE id = {$id}";
+		return $this->singleQuery();
 	}
 }
 ?>

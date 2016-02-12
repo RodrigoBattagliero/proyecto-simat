@@ -2,18 +2,15 @@
 <html lang="es">
 	<head>
 		<title>Profesionales</title>
-		<meta charset="utf-8">
-		<meta http-equiv="X-UA-Compatible" content="IE=edge">
-		<meta name="viewport" content="width=device-width, initial-scale=1">
-		<!-- Latest compiled and minified CSS -->
-		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
-
+		<?php include 'partes/head-css.php' ?>
 	</head>
 	<body>
 
 		<?php include 'partes/header.php' ?>
 		 <div class="container">
 		 	<div class="row">
+		 		<?php include 'partes/mensajes.php' ?>
+
 		 		<div class="col-sm-2"></div>
 		 		<div class="col-sm-8">
 		 			<h4 class="page-header">Profesionales</h4>
@@ -41,8 +38,9 @@
 					  	<div class="form-group">
 					  		<label for="telefono">Tipo</label>
 			 				<select class="form-control" id="tipo" name="tipo">
-								  <option value="1">Doctor</option>
+								  <option value="1">Medico</option>
 								  <option value="2">Enfermero</option>
+								  <option value="3">Instrumentista</option>
 							</select>
 			 			</div>
 					  <button type="submit" class="btn btn-default">Guardar</button>
@@ -51,10 +49,6 @@
 		 		<div class="col-sm-2"></div>
 		 	</div>
 		 </div>
-
-		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-		<!-- Latest compiled and minified JavaScript -->
-		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
-		
+		<?php include 'partes/footer-js.php' ?>
 	</body>
 </html>

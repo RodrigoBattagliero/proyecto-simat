@@ -10,6 +10,9 @@ class PacientesController extends Controller {
 	}
 
 	public function get($whereData = array(), $whereOption = ''){
+		if($_SESSION['tipo'] == 4){
+			$whereData['id_login'] = $_SESSION['id_login'];
+		}
 		return $this->model->get($whereData,$whereOption);
 	}
 
@@ -17,8 +20,8 @@ class PacientesController extends Controller {
 		return $this->model->save($data);
 	}
 
-	public function update($data = array()){
-		return $this->model->update($data);
+	public function update($data = array(),$whereData = array()){
+		return $this->model->update($data,$whereData);
 	}
 
 	public function delete($whereData = array(),$whereOption = ''){

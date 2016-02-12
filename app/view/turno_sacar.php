@@ -2,38 +2,13 @@
 <html lang="es">
 	<head>
 		<title>Titulo</title>
-		<meta charset="utf-8">
-		<meta http-equiv="X-UA-Compatible" content="IE=edge">
-		<meta name="viewport" content="width=device-width, initial-scale=1">
-		<!-- Latest compiled and minified CSS -->
-		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
-
-		<link rel="stylesheet" href="../../app/view/js/datetimepicker/jquery.datetimepicker.css">
+		<?php include 'partes/head-css.php' ?>
 	</head>
 	<body>
 
-		<nav class="navbar-default">
-			<div class="container">
-				<div class="navbar-header">
-					<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
-						<span class="sr-only">Navegación</span>
-						<span class="icon-bar"></span>
-						<span class="icon-bar"></span>
-						<span class="icon-bar"></span>
-					</button>
-					<a class="navbar-brand" href="#">LOGO</a>
-				</div>
-
-				<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-					<ul class="nav navbar-nav">
-				        <li class="active"><a href="#">Turnos <span class="sr-only">(current)</span></a></li>
-				        <li><a href="perfil.html">Perfil</a></li>
-				        <li><a href="#">Salir</a></li>
-				    </ul>
-				</div>
-			</div>		
-		</nav>
+		<?php include 'partes/header.php' ?>
 		 <div class="container">
+		 	<?php include 'partes/mensajes.php' ?>
 		 	<div class="row">
 		 		<div class="col-sm-6">
 		 			<h4 class="page-header">Turnos</h4>
@@ -45,20 +20,24 @@
 				 			</tr>
 				 		</thead>
 				 		<tbody>
-				 			<tr>
-				 				<td>Dr. Algo</td>
-				 				<td>12/12/2106 15:00 Hs</td>
-				 			</tr>
-				 			<tr>
-				 				<td>Dr. Algo</td>
-				 				<td>19/12/2106 15:00 Hs</td>
-				 			</tr>
+				 			<?php if(!empty($turnos)): ?>
+				 				<?php foreach($turnos as $turno): ?>
+				 					<tr>
+				 						<td><?= $turno->profesional ?></td>
+				 						<td><?= $turno->fecha_inicio ?></td>
+				 					</tr>
+				 				<?php endforeach; ?>
+				 			<?php else: ?>
+				 				<tr>
+				 					<td colspan="2">No hay datos para mostrar</td>
+				 				</tr>
+				 			<?php endif; ?>
 				 		</tbody>
 				 	</table>
 		 		</div>
 		 		<div class="col-sm-6">
 		 			<h4 class="page-header">Nuevo turno</h4>
-		 			<form method="post" >
+		 			<form method="post" action="<?= URL ?>turnos/alta" >
 		 				<div class="form-group">
 		 					<label for="id_profesional">Profesional</label>
 		 					<select class="form-control" id="id_profesional" name="id_profesional" >
@@ -80,11 +59,5 @@
 		 	</div>
 		 </div>
 
-		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-
-		<!-- Latest compiled and minified JavaScript -->
-		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
-		<script type="text/javascript" src="../../app/view/js/datetimepicker/jquery.datetimepicker.full.min.js"></script>
-		<script type="text/javascript" src="../../app/view/js/calendario.js"></script>
-	</body>
+		<?php include 'partes/footer-js.php' ?>	</body>
 </html>

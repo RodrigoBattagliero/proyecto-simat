@@ -10,10 +10,20 @@ class GuardiasController extends Controller {
 	}
 
 	public function get($whereData = array(), $whereOption = ''){
+		if($_SESSION['tipo'] == 3){
+			$profesionales = new ProfesionalesController();
+			$profe = $profesionales->get(array('id_login'=>$_SESSION['id_login']));
+			$whereData['id_profesional'] = $profe[0]->id;
+		}
 		return $this->model->get($whereData,$whereOption);
 	}
 
 	public function getDefault($whereData = array(), $whereOption = ''){
+		if($_SESSION['tipo'] == 3){
+			$profesionales = new ProfesionalesController();
+			$profe = $profesionales->get(array('id_login'=>$_SESSION['id_login']));
+			$whereData['id_profesional'] = $profe[0]->id;
+		}
 		return $this->model->getDefault($whereData);
 	}
 

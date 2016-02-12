@@ -2,23 +2,99 @@
 <html lang="es">
 	<head>
 		<title>Titulo</title>
-		<meta charset="utf-8">
-		<meta http-equiv="X-UA-Compatible" content="IE=edge">
-		<meta name="viewport" content="width=device-width, initial-scale=1">
-		<!-- Latest compiled and minified CSS -->
-		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
-
-		<link rel="stylesheet" type="text/css" href="js/pickadate/themes/default.css">
-		<link rel="stylesheet" type="text/css" href="js/pickadate/themes/default.date.css">
-		<link rel="stylesheet" type="text/css" href="js/pickadate/themes/default.time.css">
+		<?php include 'partes/head-css.php' ?>
 	</head>
 	<body>
 
 		<?php include 'partes/header.php' ?>
 		 <div class="container">
+		 	<?php include 'partes/mensajes.php' ?>
 		 	<div class="row">
-		 		<div class="col-sm-12">
+		 		<div class="col-sm-4">
+		 			<h4 class="page-header">Acciones</h4>
+		 			<ul class="nav nav-tabs" role="tablist">
+		 				<li role="presentation" class="active"><a href="#profesionalesBuscar" aria-controls="usuariosBuscar" role="tab" data-toggle="tab"><span class="glyphicon glyphicon-search" aria-hidden="true"></span> Buscar</a></li>
+		 				<li role="presentation" ><a href="#profesionalesNuevo" aria-controls="usuariosNuevo" role="tab" data-toggle="tab"><span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> Nuevo profesional</a></li>
+		 			</ul>
+		 			<div class="tab-content">
+		 				<div role="tabpanel" class="tab-pane active" id="profesionalesBuscar">
+		 					<form  method="get" action="?">
+		 				
+				 				<div class="form-group">
+				 					<label for="nombre">Nombre</label>
+				 					<input type="text" id="nombre" name="nombre" class="form-control">
+				 				</div>
+			 					
+			 					<div class="form-group">
+				 					<label for="apellido">Apellido</label>
+				 					<input type="text" id="apellido" name="apellido" class="form-control">
+				 				</div>
+
+				 				<div class="form-group">
+				 					<label for="dni">DNI</label>
+				 					<input type="text" id="dni" name="dni" class="form-control">
+				 				</div>
+
+				 				<div class="form-group">
+				 					<label for="tipo">Tipo</label>
+				 					<select class="form-control" id="tipo" name="tipo" >
+				 						<option value="0">Seleccionar</option>
+										<option value="1">Medico</option>
+										<option value="2">Enfermero</option>
+										<option value="3">Instrumentista</option>
+									</select>
+				 				</div>
+
+						  	
+						  		<button type="submit" class="btn btn-default">Buscar</button>
+						  	
+							</form>
+		 				</div>
+		 				<div role="tabpanel" class="tab-pane" id="profesionalesNuevo">
+
+				 			<form action="<?= URL.'profesionales/alta' ?>" method="post">
+				 				<div class="form-group">
+								    <label for="nombre">Nombre</label>
+								    <input type="text" class="form-control" id="nombre" name="nombre" placeholder="Nombre">
+							  	</div>
+							  	<div class="form-group">
+								    <label for="apellido">Apellido</label>
+								    <input type="text" name="apellido" class="form-control" id="apellido" placeholder="Apellido">
+							  	</div>
+							  	<div class="form-group">
+								    <label for="dni">DNI</label>
+								    <input type="text" class="form-control" id="dni" name="dni" placeholder="dni">
+							  	</div>
+							  	<div class="form-group">
+								    <label for="direccion">Dirección</label>
+								    <input type="text" class="form-control" id="direccion" name="direccion" placeholder="direccion">
+							  	</div>
+							  	<div class="form-group">
+								    <label for="telefono">Teléfono</label>
+								    <input type="text" class="form-control" id="telefono" name="telefono" placeholder="telefono">
+							  	</div>
+							  	<div class="form-group">
+							  		<label for="telefono">Tipo</label>
+					 				<select class="form-control" id="tipo" name="tipo">
+										  <option value="1">Medico</option>
+										  <option value="2">Enfermero</option>
+										  <option value="3">Instrumentista</option>
+									</select>
+					 			</div>
+							  <button type="submit" class="btn btn-default">Guardar</button>
+				 			</form>
+		 				</div>
+		 			</div>
+		 			
+
+					
+		 			
+		 		</div>
+		 		<div class="col-sm-8">
 		 			<h4 class="page-header">Profesionales</h4>
+		 			<a href="<?= URL ?>profesionales/print?nombre=<?= $searchData['nombre'] ?>&apellido=<?= $searchData['apellido'] ?>&dni=<?= $searchData['dni'] ?>&tipo=<?= $searchData['tipo'] ?>" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span> Descargar PDF</a>
+		 			<br />
+		 			<br />
 		 			<table class="table table-hover table-bordered">
 				 		<thead>
 				 			<tr>
@@ -40,8 +116,8 @@
 						 				<td><?= $dato->telefono ?></td>
 						 				<td><?= $dato->tipo ?></td>
 						 				<td>
-						 					<a href="<?= URL ?>profesionales/eliminar/<?= $dato->id ?>">Eliminar</a>
-						 					<a href="<?= URL ?>profesionales/<?= $dato->id ?>">Modificar</a>
+						 					<a href="<?= URL ?>profesionales/<?= $dato->id ?>" title="Editar" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-edit" aria-hidden="true"></span></a>
+						 					<a href="<?= URL ?>profesionales/eliminar/<?= $dato->id ?>" title="Eliminar" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span> </a>
 						 				</td>
 						 			</tr>
 						 		<?php endforeach; ?>
@@ -56,14 +132,6 @@
 		 	</div>
 		 </div>
 
-		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-		<!-- Latest compiled and minified JavaScript -->
-		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
-		
-		<!-- datepicker -->
-		<script type="text/javascript" src="js/pickadate/picker.js"></script>
-		<script type="text/javascript" src="js/pickadate/picker.date.js"></script>
-		<script type="text/javascript" src="js/pickadate/picker.time.js"></script>
-		<script type="text/javascript" src="js/calendario.js"></script>
+		<?php include 'partes/footer-js.php' ?>
 	</body>
 </html>

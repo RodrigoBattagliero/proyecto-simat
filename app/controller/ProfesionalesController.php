@@ -10,7 +10,22 @@ class ProfesionalesController extends Controller {
 	}
 
 	public function get($whereData = array(), $whereOption = ''){
-		return $this->model->get($whereData,$whereOption);
+		if(isset($_SESSION['tipo']) && $_SESSION['tipo'] == 3){
+			$whereData['id_login'] = $_SESSION['id_login'];
+		}
+		$data = $this->model->get($whereData,$whereOption);
+		if($data){
+			foreach($data as $da){	
+				if($da->tipo == 1){
+					$da->tipo = 'Medico';
+				}else if($da->tipo == 2){
+					$da->tipo = 'Enfermero';
+				}else{
+					$da->tipo = 'Instrumentista';
+				}
+			}
+		}
+		return $data;
 	}
 
 	public function save($data = array()){

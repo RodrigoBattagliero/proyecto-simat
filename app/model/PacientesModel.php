@@ -9,7 +9,7 @@ class PacientesModel extends Model{
 		$this->table = 'pacientes';
 		$this->where = ' 1';
 
-		$this->defaultFields = ' id, nombre, apellido, foto, fecha_nacimiento, sexo, tutor, telefono, direccion, localidad, ocupacion, obra_social, observaciones';
+		$this->defaultFields = ' id, nombre, apellido, foto, fecha_nacimiento, sexo, tutor, telefono, direccion, localidad, ocupacion, obra_social, observaciones, id_login';
 
 		parent::setFiels();
 

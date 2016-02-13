@@ -14,11 +14,14 @@
 		 			<h4 class="page-header">Acciones</h4>
 		 			<ul class="nav nav-tabs" role="tablist">
 		 				<li role="presentation" class="active"><a href="#turnosBuscar" aria-controls="usuariosBuscar" role="tab" data-toggle="tab"><span class="glyphicon glyphicon-search" aria-hidden="true"></span> Buscar</a></li>
-		 				<li role="presentation" ><a href="#turnosNuevo" aria-controls="usuariosNuevo" role="tab" data-toggle="tab"><span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> Nuevo turno</a></li>
+		 				<?php if($_SESSION['tipo'] != 3): ?>
+		 					<li role="presentation" ><a href="#turnosNuevo" aria-controls="usuariosNuevo" role="tab" data-toggle="tab"><span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> Nuevo turno</a></li>
+		 				<?php endif; ?>
 		 			</ul>
 		 			<div class="tab-content">
+		 				
 		 				<div role="tabpanel" class="tab-pane active" id="turnosBuscar">
-		 					<form method="post" action="<?= URL ?>turnos/search" >
+		 					<form method="get" action="<?= URL ?>turnos/search" >
 				 				<div class="form-group">
 				 					<label for="id_profesional">Profesional</label>
 				 					<select class="form-control" id="id_profesional" name="id_profesional" >
@@ -45,8 +48,10 @@
 							  <button type="submit" class="btn btn-default">Buscar</button>
 							</form>
 		 				</div>
+		 				
+		 				<?php if($_SESSION['tipo'] != 3): ?>
 		 				<div role="tabpanel" class="tab-pane" id="turnosNuevo">
-		 					<form method="get" action="<?= URL ?>turnos" >
+		 					<form method="post" action="<?= URL ?>turnos" >
 				 				<div class="form-group">
 				 					<label for="id_profesional">Profesional</label>
 				 					<select class="form-control" id="id_profesional" name="id_profesional" >
@@ -73,12 +78,16 @@
 							</form>
 		 					
 		 				</div>
+		 				<?php endif; ?>
 		 			</div>
 		 			
 		 		</div>
 		 		<div class="col-sm-8">
 		 			<h4 class="page-header">Turnos</h4>
 		 			<a href="<?= URL ?>turnos/print?user=<?= (isset($_GET['usuario'])) ? $_GET['usuario'] : '' ?>&tipo=<?= (isset($_GET['tipo'])) ? $_GET['tipo'] : '' ?> " class="btn btn-default btn-sm"><span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span> Descargar PDF</a>
+		 			<?php if($_SESSION['tipo'] != 4): ?>
+		 			<a href="#" class="btn btn-default btn-sm"><span class="glyphicon glyphicon glyphicon-envelope" aria-hidden="true"></span> Enviar recordatorio</a>
+		 			<?php endif; ?>
 		 			<br />
 		 			<br />
 		 			<table class="table table-hover table-bordered">
@@ -98,9 +107,11 @@
 						 				<td><?= $turno->profesional ?></td>
 						 				<td><?= $turno->paciente ?></td>
 						 				<td>
-							 				<a href="<?= URL ?>turnos/eliminar/<?= $turno->id ?>">Baja</a>
 							 				<?php if($_SESSION['tipo'] == 1 || $_SESSION['tipo'] == 2): ?>
+							 					<a href="<?= URL ?>turnos/eliminar/<?= $turno->id ?>">Baja</a>
 							 					<a href="<?= URL ?>turnos/<?= $turno->id ?>">Modificar</a>
+							 				<?php else: ?>
+							 					No hay acciones.
 							 				<?php endif; ?>
 						 				</td>
 						 			</tr>

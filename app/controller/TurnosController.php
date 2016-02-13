@@ -39,9 +39,7 @@ class TurnosController extends Controller {
 	}
 
 	public function save($data = array()){
-		if($_SESSION['tipo'] == 4){
-			$data['id_paciente'] = $_SESSION['tipo'];
-		}
+		
 		$result = 0;
 		if($this->model->beforeSave($data['id_profesional'],$data['id_paciente'],$data['fecha_inicio'])){
 			$result = $this->model->save($data);

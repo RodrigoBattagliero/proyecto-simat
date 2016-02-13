@@ -38,84 +38,45 @@
 		 	<?php include 'partes/mensajes.php' ?>
 		 	<div class="row">
 		 		<div class="col-sm-4">
-		 			<h4 class="page-header">Acciones</h4>
-		 			<ul class="nav nav-tabs" role="tablist">
-		 				<li role="presentation" class="active"><a href="#guardiasBuscar" aria-controls="usuariosBuscar" role="tab" data-toggle="tab"><span class="glyphicon glyphicon-search" aria-hidden="true"></span> Buscar</a></li>
-		 				<li role="presentation" ><a href="#guardiasNuevo" aria-controls="usuariosNuevo" role="tab" data-toggle="tab"><span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> Nueva guardia</a></li>
-		 			</ul>
-		 			<div class="tab-content">
-		 				<div role="tabpanel" class="tab-pane active" id="guardiasBuscar">
-		 					<form  method="get" action="<?= URL ?>guardias/search">
-		 				
-				 				<div class="form-group">
-				 					<label for="id_profesional">Profesional</label>
-				 					<select class="form-control" id="id_profesional" name="id_profesional" >
-				 						<option value="0">Seleccionar</option>
-										<?php foreach($profesionales as $profesional): ?>
-											<option value="<?= $profesional->id ?>"><?= $profesional->apellido . ', ' . $profesional->nombre ?></option>
-										<?php endforeach; ?>
-									</select>
-				 				</div>
-			 				
-								<div class="form-group">
-				 					<label for="fecha_inicio">Incio</label>
-								    <label class="sr-only" for="fecha_inicio">Fecha</label>
-								    <input type="text" class="form-control fecha_inicio datetimepicker" name="fecha_inicio" id="fecha_inicio" placeholder="Fecha"  >
-								</div>
-							
-							
-								<div class="form-group">
-				 					<label for="fecha_final">Fin</label>
-									<label class="sr-only" for="fecha_final">Fecha</label>
-								    <input type="text" class="form-control fecha_final datetimepicker" name="fecha_final" id="fecha_final" placeholder="Fecha">
-								</div>
-						  	
-						  	
-						  		<button type="submit" class="btn btn-default">Confirmar</button>
-						  	
-							</form>
-		 				</div>
-		 				<div role="tabpanel" class="tab-pane" id="guardiasNuevo">
-		 					<?php if($_SESSION['tipo'] == 1 || $_SESSION['tipo'] == 2): ?>
+		 			<h4 class="page-header">Buscar</h4>
 		 			
-					 			<form method="post" action="<?= URL ?>guardias/<?php echo ($guardiaSelected->id) ? $guardiaSelected->id : '' ?>">
-					 				
-					 				<div class="form-group">
-					 					<label for="id_profesional">Profesional</label>
-					 					<select class="form-control" id="id_profesional" name="id_profesional" >
-					 						<option value="0">Seleccionar</option>
-											<?php foreach($profesionales as $profesional): ?>
-												<option value="<?= $profesional->id ?>" <?php echo ($guardiaSelected->id_profesional == $profesional->id) ? ' selected ' : '' ?>><?= $profesional->apellido . ', ' . $profesional->nombre ?></option>
-											<?php endforeach; ?>
-										</select>
-					 				</div>
-				 				
-									<div class="form-group">
-					 					<label for="fecha_inicio">Incio</label>
-									    <label class="sr-only" for="fecha_inicio">Fecha</label>
-									    <input type="text" class="form-control fecha_inicio datetimepicker" name="fecha_inicio" id="fecha_inicio" placeholder="Fecha" value="<?= $guardiaSelected->fecha_inicio ?>" >
-									</div>
-								
-								
-									<div class="form-group">
-					 					<label for="fecha_final">Fin</label>
-										<label class="sr-only" for="fecha_final">Fecha</label>
-									    <input type="text" class="form-control fecha_final datetimepicker" name="fecha_final" id="fecha_final" placeholder="Fecha" value="<?= $guardiaSelected->fecha_final ?>">
-									</div>
-							  	
-							  	
-							  		<button type="submit" class="btn btn-default">Confirmar</button>
-							  	
-								</form>
-								<?php endif; ?>
+ 					<form  method="get" action="<?= URL ?>guardias/search">
+ 				
+		 				<div class="form-group">
+		 					<label for="id_profesional">Profesional</label>
+		 					<select class="form-control" id="id_profesional" name="id_profesional" >
+		 						<option value="0">Seleccionar</option>
+								<?php foreach($profesionales as $profesional): ?>
+									<option value="<?= $profesional->id ?>"><?= $profesional->apellido . ', ' . $profesional->nombre ?></option>
+								<?php endforeach; ?>
+							</select>
 		 				</div>
-		 			</div>
+	 				
+						<div class="form-group">
+		 					<label for="fecha_inicio">Incio</label>
+						    <label class="sr-only" for="fecha_inicio">Fecha</label>
+						    <input type="text" class="form-control fecha_inicio datetimepicker" name="fecha_inicio" id="fecha_inicio" placeholder="Fecha"  >
+						</div>
+					
+					
+						<div class="form-group">
+		 					<label for="fecha_final">Fin</label>
+							<label class="sr-only" for="fecha_final">Fecha</label>
+						    <input type="text" class="form-control fecha_final datetimepicker" name="fecha_final" id="fecha_final" placeholder="Fecha">
+						</div>
+				  	
+				  	
+				  		<button type="submit" class="btn btn-default">Confirmar</button>
+				  	
+					</form>
+		 				
 		 			
 		 		</div>
 		 		<div class="col-sm-8">
 		 			<h4 class="page-header">Guardias</h4>
 		 			
 		 			<a href="<?= URL ?>guardias/print?id_profesional=<?= $search['id_profesional'] ?>&fecha_inicio=<?= $search['fecha_inicio'] ?>&fecha_final=<?= $search['fecha_final'] ?>" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span> Descargar PDF</a>
+		 			<a href="<?= URL ?>guardias/alta"  class="btn btn-default btn-sm"><span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> Nueva guardia</a>
 		 			<br />
 		 			<br />
 		 			<table class="table table-hover table-bordered">

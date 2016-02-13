@@ -10,6 +10,8 @@
 		 <div class="container">
 		 	<div class="row">
 		 		<div class="col-sm-12">
+		 			<?php include 'partes/mensajes.php' ?>
+		 			<?php if(isset($habitacionSelected)): ?>
 		 			<h4 class="page-header">Nueva internación</h4>
 		 			<form  method="post" action="<?= URL ?>internaciones">
 		 				<div class="form-group">
@@ -21,13 +23,13 @@
 							</select>
 			 			</div>
 		 				
-		 				<div class="form-group">
+		 				<div class="form-group" style="display:none" >
 		 					<label for="habitacion">Habitación</label>
 		 					<select name="habitacion" id="habitacion" class="form-control">
 		 						<option value="<?= (isset($habitacionSelected)) ? $habitacionSelected : ''  ?>"><?= (isset($habitacionSelected)) ? $habitacionSelected : ''  ?></option>
 		 					</select>
 		 				</div>
-		 				<div class="form-group">
+		 				<div class="form-group" style="display:none">
 		 					<label for="cama">Cama</label>
 		 					<select name="cama" id="cama" class="form-control">
 		 						<option value="<?= (isset($camaSelected)) ? $camaSelected : ''  ?>"><?= (isset($camaSelected)) ? $camaSelected : ''  ?></option>
@@ -37,9 +39,11 @@
 				  		<button type="submit" class="btn btn-default">Confirmar</button>
 				  	
 					</form>
+					<?php endif; ?>
 		 		</div>
 		 	</div>
 		 	<div class="row">
+		 		<h4 class="page-header">Internaciones</h4>
 		 		<div class="col-sm-6">
 		 			
 		 			<?php for($i=1;$i<=4;$i++): ?>

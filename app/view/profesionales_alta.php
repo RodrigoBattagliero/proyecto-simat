@@ -43,6 +43,17 @@
 								  <option value="3">Instrumentista</option>
 							</select>
 			 			</div>
+			 			<div class="form-group">
+			 				<label >
+			 					 <input type="checkbox" name="lunes"> Lunes
+			 				</label>
+							<label >
+			 					 <input type="checkbox" name="martes"> Martes
+			 				</label>
+			 				<label >
+			 					 <input type="checkbox" name="miercoles"> Miércoles
+			 				</label>
+			 			</div>
 					  <button type="submit" class="btn btn-default">Guardar</button>
 		 			</form>
 		 		</div>

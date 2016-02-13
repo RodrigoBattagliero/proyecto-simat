@@ -93,6 +93,51 @@ $app->get('/logout',function() use($app){
 	$app->redirect(URL .'login');
 });
 
+$app->group('/signup', function() use($app){
+
+	$app->get('/', function() use($app){
+		$app->render('signup.php');
+	});
+
+	$app->post('/', function() use($app){
+		$data = $app->request()->post();
+		$paciente = $data['paciente'];
+		$user = $data['user'];
+		$user['tipo'] = 4;
+
+		$pacientesController = new PacientesController();
+		$usersController = new LoginController();
+
+		$id_login = $usersController->save($user);
+		if(is_int($id_login)){
+			
+			$id_paciente = $pacientesController->save($paciente);
+			if($id_paciente){
+				$result = $pacientesController->update(array('id_login'=>$id_login),array('id'=>$id_paciente));
+				if($result){ 
+					$app->flash('msgExito','Se ha guardado el usuario correctamente.');
+					$app->redirect(URL.'login');
+				}else{
+					$pacientesController->delete(array('id'=>$id_paciente));
+					$usersController->delete(array('id'=>$id_login));
+					$app->flash('msgExito','Hubo un problema la guardar el usuario. Por favor, intente de nuevo más tarde.');
+					$app->redirect(URL.'signup');
+				}				
+			}else{
+				$usersController->delete(array('id'=>$id_login));
+				$app->flash('msgExito','Hubo un problema la guardar el usuario. Por favor, intente de nuevo más tarde.');
+				$app->redirect(URL.'signup');
+			}
+
+
+		}else{
+			$app->flash('msgError','Error:'.$id_login);
+			$app->redirect(URL.'signup');
+		}
+	});
+
+});
+
 $app->group('/pacientes',authenticateForRole(array('administrador')), function() use($app){
 
 	$app->get('/', function() use($app){
@@ -320,7 +365,14 @@ $app->group('/guardias', authenticateForRole(array('administrador','secretaria',
 		$app->render('guardias.php',array('profesionales'=>$profesionalesList,'guardias'=>$guardiasList));
 	});
 
-	$app->post('/',authenticateForRole(array('administrador','secretaria')), function() use($app){
+	$app->get('/alta', function() use($app){
+		$profesionales = new ProfesionalesController();
+		$profesionalesList = $profesionales->get();
+
+		$app->render('guardias_alta.php', array('profesionales'=>$profesionalesList));
+	});
+
+	$app->post('/alta',authenticateForRole(array('administrador','secretaria')), function() use($app){
 		$guardias = new GuardiasController();
 		$data = $app->request()->post();
 		$result = $guardias->save($data);
@@ -391,16 +443,14 @@ $app->group('/guardias', authenticateForRole(array('administrador','secretaria',
 
 	$app->get('/:id',authenticateForRole(array('administrador')), function($id) use($app){
 		$guardias = new GuardiasController();
-		$guardiasList = $guardias->getDefault();
 		$guardiaSelected = $guardias->get(array('id'=>$id));
 
 		
 		$profesionales = new ProfesionalesController();
 		$profesionalesList = $profesionales->get();
 
-		$app->render('guardias.php',array(
+		$app->render('guardias_modificar.php',array(
 			'profesionales'=>$profesionalesList,
-			'guardias'=>$guardiasList,
 			'guardiaSelected'=>$guardiaSelected[0]
 			)
 		);
@@ -422,7 +472,7 @@ $app->group('/guardias', authenticateForRole(array('administrador','secretaria',
 
 });
 
-$app->group('/historias_clinicas',authenticateForRole(array('administrador','secretaria','profesional')),function() use($app){
+$app->group('/historias_clinicas',authenticateForRole(array('administrador','profesional')),function() use($app){
 
 	$app->get('/', function() use($app){
 		$historiasClinicas = new HistoriasClinicasController();
@@ -550,7 +600,7 @@ $app->group('/turnos', authenticateForRole(array('administrador','secretaria','p
 		$app->render('turnos.php',array('profesionales'=>$profe, 'pacientes'=>$paci, 'turnos'=>$tur));
 	});
 
-	$app->post('/', function() use($app){
+	$app->post('/',authenticateForRole(array('administrador','secretaria','paciente')), function() use($app){
 		$turnos = new TurnosController();
 		$data = $app->request()->post();
 		$result = $turnos->save($data);
@@ -562,7 +612,7 @@ $app->group('/turnos', authenticateForRole(array('administrador','secretaria','p
 		$app->redirect(URL.'turnos');
 	});
 
-	$app->get('/alta', function() use($app){
+	$app->get('/alta',authenticateForRole(array('administrador','secretaria','paciente')), function() use($app){
 		$profesionales = new ProfesionalesController();
 		$profe = $profesionales->get();
 
@@ -572,7 +622,7 @@ $app->group('/turnos', authenticateForRole(array('administrador','secretaria','p
 		$app->render('turno_sacar.php',array('turnos'=>$turnos,'profesionales'=>$profe));
 	});
 
-	$app->post('/alta', function() use($app){
+	$app->post('/alta',authenticateForRole(array('administrador','secretaria','paciente')), function() use($app){
 		$turnos = new TurnosController();
 		$data = $app->request()->post();
 		$result = $turnos->save($data);
@@ -639,7 +689,7 @@ $app->group('/internaciones', authenticateForRole(array('administrador','secreta
 		if($result > 0){
 			$app->flash('msgExito','Se guardó la internación correctamente.');
 		}else{
-			$app->flash('msgError','Hubo un problema al guardar la internación.');
+			$app->flash('msgError','Hubo un problema al guardar la internación. Aseguresé que el paciente no esté internado.');
 		}
 		$app->redirect(URL.'internaciones');
 	});
@@ -748,6 +798,72 @@ $app->group('/usuarios', authenticateForRole(array('administrador')),function() 
 		
 		$print = new PrintController();
 		$print->printUsuarios($users);
+	});
+
+	$app->get('/alta', function() use($app){
+		$pacientes = new PacientesController();
+		$paci = $pacientes->get();
+
+		$profesionales = new ProfesionalesController();
+		$profe = $profesionales->get();
+		$app->render('usuarios_alta.php',array('pacientes'=>$paci,'profesionales'=>$profe));
+	});
+
+	$app->post('/alta', function() use($app){
+		$data = $app->request()->post();
+		
+		$usuarios = new LoginController();
+		$id_paciente = null;
+		$id_profesional = null;
+		if(!empty($data['id_paciente'])){
+			$id_paciente = $data['id_paciente'];
+		}
+		if(!empty($data['id_profesional'])){
+			$id_profesional = $data['id_profesional'];
+		}
+		unset($data['id_profesional']);
+		unset($data['id_paciente']);
+		$id_login = $usuarios->save($data);
+
+		if(is_int($id_login)){
+			$b = false;
+			if($id_paciente){
+				$b = true;
+				$paciente = new PacientesController();
+				$result = $paciente->update(array('id_login'=>$id_login),array('id'=>$id_paciente));
+			}elseif ($id_profesional) {
+				$b = true;
+				$profesional = new ProfesionalesController();
+				$result = $profesional->update(array('id_login'=>$id_login),array('id'=>$id_profesional));
+			}
+			if($b && $result){ 
+				$app->flash('msgExito','Se ha guardado el usuario correctamente.');
+				$app->redirect(URL.'usuarios');
+			}elseif($b){
+				$usuarios->delete(array('id'=>$id_login));
+				$app->flash('msgError','Se produjo un error al guardar el usuario.');
+				$app->redirect(URL.'usuarios');
+			}else{
+				$app->flash('msgExito','Se ha guardado el usuario correctamente.');
+				$app->redirect(URL.'usuarios');
+			}
+
+		}else{
+			$app->flash('msgError','Error:'.$id_login);
+			$app->redirect(URL.'usuarios');
+		}
+	});
+
+	$app->get('/eliminar/:id', function($id) use($app){
+		$usuarios = new LoginController();
+		$result = $usuarios->delete(array('id'=>$id));
+		if($result){
+			$app->flash('msgExito','Se eliminó correctamente.');
+			$app->redirect(URL.'usuarios');
+		}else{
+			$app->flash('msgError','Se produjo un error.');
+			$app->redirect(URL.'usuarios');
+		}
 	});
 
 });

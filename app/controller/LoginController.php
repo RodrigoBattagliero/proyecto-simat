@@ -14,7 +14,20 @@ class LoginController extends Controller {
 	}
 
 	public function save($data = array()){
-		return $this->model->save($data);
+		$result = false;
+		if($this->model->beforeSave($data['user'])){
+			$data['password'] = $this->encrypt($data['password']);
+			$data['repetir_password'] = $this->encrypt($data['repetir_password']);
+			if(strcmp($data['password'], $data['repetir_password']) == 0){
+				unset($data['repetir_password']);
+				$result = $this->model->save($data);
+			}else{
+				$result = "Las contraseñas no coinciden.";
+			}
+		}else{
+			$result = "El nombre de usuario ya está en uso.";
+		}
+		return $result;
 	}
 
 	public function update($data = array(),$whereData = array()){

@@ -30,5 +30,15 @@ class LoginModel extends Model{
 
 		return $this->dbRows;		
 	}
+
+	public function beforeSave($userName){
+		$b = false;
+		$this->dbQuery = "SELECT COUNT(*) AS cant FROM login WHERE user = '{$userName}'";
+		$this->rowsFromQuery();
+		if($this->dbRows[0]->cant == 0){
+			$b = true;
+		}
+		return $b;
+	}
 }
 ?>

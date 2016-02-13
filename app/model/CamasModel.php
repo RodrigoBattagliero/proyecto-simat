@@ -47,5 +47,15 @@ class CamasModel extends Model{
 		$this->dbQuery = "UPDATE camas SET fecha_salida = NOW() WHERE id = {$id}";
 		return $this->singleQuery();
 	}
+
+	public function beforeSave($id_paciente = 0, $fecha_ingreso = ''){
+		$b = false;
+		$this->dbQuery = "SELECT COUNT(*) AS cant FROM camas WHERE id_paciente = {$id_paciente} AND fecha_ingreso <= NOW() AND fecha_salida IS NULL";
+		$this->rowsFromQuery();
+		if($this->dbRows[0]->cant == 0){
+			$b = true;
+		}
+		return $b;
+	}
 }
 ?>

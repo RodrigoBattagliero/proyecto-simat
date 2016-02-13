@@ -34,8 +34,11 @@ class CamasController extends Controller {
 	}
 
 	public function save($data = array()){
-
-		return $this->model->save($data);
+		$result = false;
+		if($this->model->beforeSave($data['id_paciente'])){
+			$result = $this->model->save($data);
+		}
+		return $result;
 	}
 
 	public function update($data = array(), $whereData = array()){
